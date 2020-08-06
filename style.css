@@ -2,8 +2,15 @@
 	Theme Name: Twisty
 	Author: Muhammad Ijaz Anjum
 	Author URI: https://bitwali.com
-	Version: 1.1.9
+  Theme URI: https://bitwali.com
+	Version: 1.1.1
 	Text Domain: twisty
+  Tags: one-column, two-columns, right-sidebar,  custom-menu, featured-images, post-formats, blog
+
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tested up to: 5.4 
+Requires PHP: 5.2 
 */
 
 
@@ -258,4 +265,29 @@ footer {
 .site-description a{
   
   font-size: 20px;
+}
+.alignleft{
+  float: left;
+}
+.aligncenter{
+  text-align: center;
+}
+.alignright{
+  float: right;
+}
+.wp-caption , .wp-caption-text {
+font-family: Tahoma, Arial, sans-serif;
+}
+.sticky, .bypostauthor {
+  display: block;
+}
+.screen-reader-text {
+  border: 0;
+}
+.gallery-caption {
+  display: block;
+  font-size: 0.71111em;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0.5rem;
 }

@@ -3,34 +3,26 @@
     <div class="container">
       <div class="col-md-12">
         <div class="showcase-content">
-          <h1><?php echo get_theme_mod('display_heading', 'twisty'); ?>
+          <h1><?php  get_theme_mod('display_heading', esc_html_e('Twisty','twisty')); ?>
           </h1>
-          <p class="lead"><?php echo get_theme_mod('display_text', 'A Wordpress Theme By you'); ?>
+          <p class="lead"><?php  get_theme_mod('display_text', esc_html_e('A Wordpress Theme By you','twisty')); ?>
           </p>
 
-          <?php
-           if(get_theme_mod('facebook_url', 'http://facebook.com') != '') : 
+          <?php 
+            if (get_theme_mod('display_checkbox',1)) {
+                get_template_part( '/template-part/social', 'links' ); 
+            }
           ?>
-            <a class="btn btn-default btn-lg" href="<?php echo get_theme_mod('facebook_url','http://facebook.com'); ?>" target="_blank">
-              <i class="fa fa-facebook fa-fw">
-              </i> Facebook
-            </a>
-            <?php endif; ?>
-            
-            <?php if(get_theme_mod('twitter_url', 'http://twitter.com') != '') : ?>
-            <a class="btn btn-default btn-lg" href="<?php echo get_theme_mod('twitter_url','http://twitter.com'); ?>" target="_blank"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
-            <?php endif; ?>
 
-            <?php if(get_theme_mod('linkedin_url', 'http://linkedin.com') != '') : ?>
-            <a class="btn btn-default btn-lg" href="<?php echo get_theme_mod('facebook_url','http://linkedin.com'); ?>" target="_blank"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
-            <?php endif; ?>
+          
+
         </div>
       </div>
     </div>
   </section>
     <?php 
     $posts= new WP_Query(array(
-            'posts_per_page'    => 3,
+            'posts_per_page'    => '',
             'tax_query' => array(
                 array(
                     'taxonomy'  => 'post_format',
@@ -61,20 +53,20 @@
         $class_image='img-responsive img-circle animated fadeInLeft';
     }    
      ?>
-    <div class="<?php echo $section;?>">
+    <div class="<?php echo esc_attr( $section);?>">
         <div class="container">
             <div class="row">
-                <div class="<?php echo $class_content;?>">
-                    <hr class="section-heading-spacer">
+                <div class="<?php echo esc_attr( $class_content);?>">
                     <div class="clearfix"></div>
                     <h2 class="section-heading">
-                        <a  href="<?php the_permalink(); ?>">
+                        <a  href="<?php esc_url(the_permalink()); ?>">
                             <?php the_title();?>
                         </a>
                     </h2>
+                    <hr class="section-heading-spacer">
                     <p class="lead"><?php the_excerpt();?></p>
                 </div>
-                <div class="<?php echo $img_div;?>">
+                <div class="<?php echo esc_attr( $img_div);?>">
                     <?php the_post_thumbnail('full', array('class'=> $class_image));?>
                     
                 </div>

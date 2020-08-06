@@ -7,6 +7,7 @@
         </div>
       </div>
 </section>
+<?php if ( have_posts() ) : ?>
 
     <?php $i=0;?>
     <?php while(have_posts()):the_post();?>
@@ -28,8 +29,24 @@
           set_query_var( 'img_div' ,$img_div );
           set_query_var( 'class_image' ,$class_image );
             
-          get_template_part( '/content', get_post_format() );
+          get_template_part( '/template-part/content', get_post_format() );
     endwhile;?>
-
-    
-<?php get_footer(); ?>
+    <section class="row page">
+      <div class="container">
+        <div class="col-md-12"style="text-align: center; " >
+          <hr class="section-heading-spacer">
+            <?php
+              // Previous/next page navigation.
+              the_posts_pagination( array(
+                'prev_text'          => __( 'Previous page', 'twisty' ),
+                'next_text'          => __( 'Next page', 'twisty' ),
+                'before_page_number' => '<span class="meta-nav  btn btn-primary">' . __( 'Page', 'twisty' ) . ' </span>',
+              ) );
+            ?>
+        </div>
+      </div>
+    </section>
+    <?php else:?>
+      <?php get_template_part( '/template-part/content', 'none' );?>
+    <?php endif; ?>
+ <?php get_footer(); ?>

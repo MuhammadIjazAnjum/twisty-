@@ -22,12 +22,18 @@
 
   <?php
   $form_args = array(
-          'label_submit'=>'Send',
-          'title_reply'=>'Write a Reply or Comment',
+          'label_submit'=> _x( 'Send','mail', 'twisty' ),
+          'title_reply'=>_x( 'Write a Reply or Comment','Reply', 'twisty' ),
           'comment_notes_after' => '',
-          'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true"></textarea></p>',
+          'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment','comment', 'twisty' ) . '</label><br /><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true"></textarea></p>',
   );
 
   comment_form($form_args);
 ?>
+<?php 
+// Show comment navigation.
+  if ( have_comments() ) :
+    the_comments_pagination();
+  endif;
+ ?>
 </div>

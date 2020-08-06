@@ -8,20 +8,7 @@
 	        <div class="col-md-12">
 	            <h1><?php the_title(); ?></h1>
 	        </div>
-	       <!--  <div class="col-md-6">
-	        	<div class="sub-nav">
-		            <ul> -->
-		              <?php
-		              	// $args = array(
-		              	// 	'child_of'	=> get_top_parent(),
-		              	// 	'title_li'	=> ''
-		              	// );
-		              ?>
-
-		              <?php //wp_list_pages($args); ?>
-		            <!-- </ul>
-		          </div>
-	        </div> -->
+	       
 	      </div>
 	    </section>
 

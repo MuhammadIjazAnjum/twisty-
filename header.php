@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head >
+  <meta charset="<?php bloginfo( 'charset' ); ?>" />
 	<?php wp_title();?>
 	  <style>
       .showcase{
-        height: <?php echo get_theme_mod('display_height', 650); ?>px;
-        background:url(<?php echo get_theme_mod('display_image', get_template_directory_uri().'/img/display.jpg'); ?>);
+        height: <?php  echo esc_attr(get_theme_mod('display_height', esc_attr('650','twisty'))); ?>px;
+        background:url(<?php echo esc_url( get_theme_mod('display_image', get_template_directory_uri().'/img/display.jpg')); ?>);*/
       }
       
       .banner {
-        background: url(<?php echo get_theme_mod('banner_image',get_bloginfo('template_url').'/img/banner.jpg'); ?>) no-repeat center center;
+        background: url(<?php echo esc_url(get_theme_mod('banner_image',get_template_directory_uri().'/img/banner.jpg')); ?>) no-repeat center center;
       }
     </style>
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-  
+  <?php wp_body_open(); ?>
    
 <nav class="navbar navbar-default navbar-fixed-top" style="padding-top: 30px; ">
     <div class="container">

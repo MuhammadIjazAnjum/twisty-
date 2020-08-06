@@ -3,7 +3,9 @@
     <div class="container">
       <div class="col-md-8">
         <h1>
-          <?php printf( __( 'Search Results for: %s', 'twisty' ), '<span>' . esc_html( get_search_query() ) . '</span>' ); ?>
+          <?php esc_html_e( 'Search results for: ', 'twisty' ); ?>
+          <span ><?php echo get_search_query(); ?></span>
+          
         </h1>
       </div>
       <div class="col-md-4">
@@ -11,42 +13,47 @@
         </div>
     </div>
   </section>
-    <?php $i=0;?>
+  <?php if ( have_posts() ) : ?>
+     <?php $i=0;?>
     <?php while(have_posts()):the_post();?>
-      
-        <?php 
+      <?php 
         $i++;
-    if($i % 2 !=0){
-        $section='section-a';
-        $class_content='col-lg-5 col-sm-6 animated fadeInLeft';
-        $img_div='col-lg-5 col-lg-offset-2 col-sm-6';
-        $class_image='img-responsive img-circle animated fadeInRight';
-    }else{
-         $section='section-b';
-        $class_content='col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6 animated fadeInRight';
-        $img_div='col-lg-5 col-sm-pull-6  col-sm-6';
-        $class_image='img-responsive img-circle animated fadeInLeft';
-    }    
-     ?>
-   
-     <?php if(has_post_format($format, $post_id) && get_post_format($post_id) == 'aside') : ?>
-          <?php
-            // Aside Content
-            require get_template_directory() . './content-aside.php';
-          ?>
-        <?php elseif(has_post_format($format, $post_id) && get_post_format($post_id) == 'gallery') : ?>
-          <?php
-            // Gallery Content
-            require get_template_directory() . './content-gallery.php';
-          ?>
-        <?php else : ?>
-          <?php
-            // Standard Content
-            require get_template_directory() . './content.php';
-          ?>
-        <?php endif; ?>
-     
-    <?php endwhile;?>
-
+        if($i % 2 !=0){
+          $section='section-a';
+          $class_content='col-lg-5 col-sm-6 animated fadeInLeft';
+          $img_div='col-lg-5 col-lg-offset-2 col-sm-6';
+          $class_image='img-responsive img-circle animated fadeInRight';
+          }else{
+            $section='section-b';
+            $class_content='col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6 animated fadeInRight';
+            $img_div='col-lg-5 col-sm-pull-6  col-sm-6';
+            $class_image='img-responsive img-circle animated fadeInLeft';
+          } 
+          set_query_var( 'section',  $section );
+          set_query_var( 'class_content' ,$class_content );
+          set_query_var( 'img_div' ,$img_div );
+          set_query_var( 'class_image' ,$class_image );
+            
+          get_template_part( '/template-part/content', get_post_format() );
+    endwhile;?>
+    <section class="row page">
+      <div class="container">
+        <div class="col-md-12"style="text-align: center; " >
+          <hr class="section-heading-spacer">
+            <?php
     
-<?php get_footer(); ?>
+    // Previous/next page navigation.
+      the_posts_pagination( array(
+        'prev_text'          => __( 'Previous page', 'twisty' ),
+        'next_text'          => __( 'Next page', 'twisty' ),
+        'before_page_number' => '<span class="meta-nav  btn btn-primary">' . __( 'Page', 'twisty' ) . ' </span>',
+      ) );
+
+    ?>
+        </div>
+      </div>
+    </section>
+    <?php else:?>
+      <?php get_template_part( '/template-part/content', 'none' );?>
+    <?php endif;?>
+ <?php get_footer(); ?>

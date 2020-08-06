@@ -2,25 +2,27 @@
 	function twisty_customize_register($wp_customize){
 	$wp_customize->get_setting( 'blogname' )->transport = 'postMessage';
      $wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
+      $wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
 
   if ( isset( $wp_customize->selective_refresh ) ) {
 		$wp_customize->selective_refresh->add_partial( 'blogname', array(
 			'selector' => '.site-title a',
-			'render_callback' =>function() {
-            bloginfo( 'name' );},
+			'render_callback' =>'twisty_blogname' ,
 		) );
 	}
 	if ( isset( $wp_customize->selective_refresh ) ) {
 		$wp_customize->selective_refresh->add_partial( 'blogdescription', array(
 			'selector' => '.site-description a',
-			'render_callback' =>function() {
-            bloginfo( 'description' );},
+			'render_callback' =>'twisty_blogdescription',
 		) );
 	}
-
+	if ( isset( $wp_customize->selective_refresh ) ) {
+		$wp_customize->selective_refresh->add_partial( 'header_textcolor', array(
+			'selector' => '.site-title ,.site-description ,.site-title a,.site-description a',
+			'render_callback' =>'absint' ,
+		) );
+	}
      
-
-
 		// display Section
   		$wp_customize->add_section('display', array(
 			'title'          => __('Display', 'twisty'),
@@ -32,13 +34,13 @@
 		// Image Setting
 		  $wp_customize->add_setting('display_image', array(
 		    'default' => get_template_directory_uri() . '/img/display.jpg',
-		    'type'    => 'theme_mod'
-
+		    'type'    => 'theme_mod',
+		    'sanitize_callback'		=>'twisty_sanitize_cb_url',
 		 ));
 
 		 // Image Control
 		 $wp_customize->add_control( new WP_Customize_Image_Control($wp_customize, 'display_image', array(
-		     'label'    => __('Display background image', 'twisty'),
+		     'label'    => __('Display  background image', 'twisty'),
 		     'section'  => 'display',
 		     'settings' => 'display_image',
 		     'priority' => 1,
@@ -46,8 +48,9 @@
 
 		 // Height Setting
 		$wp_customize->add_setting( 'display_height', array(
-			'default'              => _x(650, 'twisty'),
-			'type'                 => 'theme_mod'
+			'default'              => _x('650 ','display height','twisty'),
+			'type'                 => 'theme_mod',
+			'sanitize_callback'		=>'absint',
 		));
 
 		// Height Control
@@ -59,8 +62,9 @@
 
 		// Heading Setting
 		$wp_customize->add_setting( 'display_heading', array(
-			'default'              => _x('twisty Theme', 'twisty'),
-			'type'                 => 'theme_mod'
+			'default'              => __('twisty Theme', 'twisty'),
+			'type'                 => 'theme_mod',
+			'sanitize_callback'		=>'twisty_sanitize_cb_text',
 		));
 
 		// Heading Control
@@ -72,8 +76,9 @@
 
 		// Text Setting
 		$wp_customize->add_setting( 'display_text', array(
-			'default'              => _x('Custom Wordpress Theme By You', 'twisty'),
-			'type'                 => 'theme_mod'
+			'default'              => __('Custom Wordpress Theme By You', 'twisty'),
+			'type'                 => 'theme_mod',
+			'sanitize_callback'		=>'twisty_sanitize_cb_text',
 		));
 
 		// Text Control
@@ -86,49 +91,100 @@
 
 		// Social Section
 		 $wp_customize->add_section('social', array(
-		     'title'          => __('Social', 'twisty'),
+		     'title'          => __('Social Links', 'twisty'),
 		     'description'    => sprintf( __('Social media urls', 'twisty')
 		     ),
 		     'priority'       =>140,
 		 ));
+		// Enable social links on display
+		$wp_customize->add_setting( 'display_checkbox', array(
+	    'default'    => '1',
+	    'sanitize_callback'		=>'absint',
+		));
+
+				// Display checkbox  Control
+				$wp_customize->add_control(
+			    new WP_Customize_Control(
+			        $wp_customize,
+			        'display_checkbox',
+			        array(
+			            'label'     => __('Enable Social Links on Dispaly ', 'twisty'),
+			            'section'   => 'social',
+			            'settings'  => 'display_checkbox',
+			            'type'      => 'checkbox',
+			            'priority' => 1,
+			        )
+			    )
+			);
+				// Enable social links on banner
+		$wp_customize->add_setting( 'banner_checkbox', array(
+	    'default'    => '1',
+	    'sanitize_callback'		=>'absint',
+		));
+		
+
+		// Display checkbox  Control
+		$wp_customize->add_control(
+	    new WP_Customize_Control(
+	        $wp_customize,
+	        'banner_checkbox',
+	        array(
+	            'label'     => __('Enable Social Links on Banner ', 'twisty'),
+	            'section'   => 'social',
+	            'settings'  => 'banner_checkbox',
+	            'type'      => 'checkbox',
+	            'priority' => 2,
+	        )
+	    )
+	);
+
+
+
+
+
 
 		 // Facebook URL Setting
 		 $wp_customize->add_setting('facebook_url', array(
-		   'default'              => _x('http://www.facebook.com', 'twisty'),
-		   'type'                 => 'theme_mod'
+		   'default'              => __('http://www.facebook.com', 'twisty'),
+		   'type'                 => 'theme_mod',
+		   'sanitize_callback'		=>'twisty_sanitize_cb_url',
+		   
 		 ));
 
 		 // Facebook URL Control
 		 $wp_customize->add_control( 'facebook_url', array(
 		   'label'    => __('Facebook URL', 'twisty'),
 		   'section'  => 'social',
-		   'priority' => 1,
+		   'priority' => 3,
 		 ));
 
 		 // Twitter URL Setting
 		$wp_customize->add_setting('twitter_url', array(
-		'default'              => _x('http://www.twitter.com', 'twisty'),
-		'type'                 => 'theme_mod'
+		'default'              => __('http://www.twitter.com', 'twisty'),
+		'type'                 => 'theme_mod',
+		 'sanitize_callback'		=>'twisty_sanitize_cb_url',
 		));
 
 		// Twitter URL Control
 		$wp_customize->add_control( 'twitter_url', array(
 		'label'    => __('Twitter URL', 'twisty'),
 		'section'  => 'social',
-		'priority' =>2,
+		'settings'	=>'twitter_url',
+		'priority' =>4,
 		));
 
 		// Linkedin URL Setting
 		 $wp_customize->add_setting('linkedin_url', array(
-		   'default'              => _x('http://www.linkedin.com', 'twisty'),
-		   'type'                 => 'theme_mod'
+		   'default'              => __('http://www.linkedin.com', 'twisty'),
+		   'type'                 => 'theme_mod',
+		    'sanitize_callback'		=>'twisty_sanitize_cb_url',
 		 ));
 
 		 // Linkedin URL Control
 		 $wp_customize->add_control( 'linkedin_url', array(
 		   'label'    => __('LinkedIn URL', 'twisty'),
 		   'section'  => 'social',
-		   'priority' =>2,
+		   'priority' =>5,
 		 ));
 
 
@@ -143,7 +199,8 @@
 		// Image Setting
 		$wp_customize->add_setting('banner_image', array(
 		'default' => get_template_directory_uri() . '/img/banner.jpg',
-		'type'    => 'theme_mod'
+		'type'    => 'theme_mod',
+		 'sanitize_callback'		=>'twisty_sanitize_cb_url',
 
 		));
 
@@ -157,8 +214,9 @@
 
 		// Heading Setting
 		$wp_customize->add_setting( 'banner_heading', array(
-		  'default'              => _x('Follow Us On Social Media', 'twisty'),
-		  'type'                 => 'theme_mod'
+		  'default'              => __('Default text for bottom banner', 'twisty'),
+		  'type'                 => 'theme_mod',
+		  'sanitize_callback'		=>'twisty_sanitize_cb_text',
 		));
 
 		// Heading Control
@@ -177,11 +235,10 @@
 			'priority'       => 150,
 		));
 
-		
-		
 		 // Animation  Setting
 		$wp_customize->add_setting( 'animation', array(
-	    'default'    => '1'
+	    'default'    => '1',
+	    'sanitize_callback'		=>'absint',
 			
 		));
 
@@ -203,10 +260,26 @@
 	}
 
 	add_action('customize_register','twisty_customize_register');
+	// twisty bloginfo
+		 function twisty_blogname()	{
+			bloginfo('name');
+		}
 
-function twisty_customize_preview() 
-{
+		function twisty_blogdescription() {
+            bloginfo( 'description' );
+    }
+    function twisty_sanitize_cb_text($value)
+    {
+    	return esc_html($value);
+    }
+    function twisty_sanitize_cb_url($value)
+    {
+    	return esc_url($value);
+    }
 
-wp_enqueue_script( 'twisty-customize-preview', get_template_directory_uri(). '/js/customize-preview.js' ,array( 'customize-preview' ), '0.1', true  );
-}
- add_action( 'customize_preview_init', 'twisty_customize_preview' );
+	function twisty_customize_preview() 
+	{
+
+	wp_enqueue_script( 'twisty-customize-preview', get_template_directory_uri(). '/js/customize-preview.js' ,array( 'customize-preview' ), '0.1', true  );
+	}
+	 add_action( 'customize_preview_init', 'twisty_customize_preview' );
