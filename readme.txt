@@ -36,5 +36,5 @@ Images:
 
 Changelog:
 
-	Initial release- 1.1.9
+	Initial release- 1.2.3
 
